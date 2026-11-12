@@ -1,0 +1,75 @@
+@startuml
+hide methods
+skinparam linetype ortho
+
+entity Benutzer {
+  * benutzer_id : ID
+  --
+  keycloak_id : Text
+}
+
+entity Sportplatz {
+  * sportplatz_id : ID
+  --
+  benutzer_id : ID (FK)
+  name : Text
+  beschreibung : Text
+  standort : Geoposition
+  untergrund : Text
+  beleuchtung : Boolean
+  anzahl_koerbe : Zahl
+  kostenlos : Boolean
+  status : Text
+}
+
+entity Sportart {
+  * sportart_id : ID
+  --
+  bezeichnung : Text
+}
+
+entity Sportplatz_Sportart {
+  *sportplatz_id : ID (PK, FK)
+  *sportart_id   : ID (PK, FK)
+ --
+}
+
+entity Foto {
+  * foto_id : ID
+  --
+  sportplatz_id : ID (FK)
+  bild : Binärdaten
+}
+
+entity Bewertung {
+  * bewertung_id : ID
+  --
+  benutzer_id : ID (FK)
+  sportplatz_id : ID (FK)
+  sterne : Zahl
+  text : Text
+  erstellt_am : Datum
+}
+
+entity Korrekturmeldung {
+  * meldung_id : ID
+  --
+  benutzer_id : ID (FK)
+  sportplatz_id : ID (FK)
+  beschreibung : Text
+  status : Text
+  erstellt_am : Datum
+}
+
+Benutzer "1" -- "0..*" Sportplatz : erstellt
+Benutzer "1" -- "0..*" Bewertung : verfasst
+Benutzer "1" -- "0..*" Korrekturmeldung : erstellt
+
+Sportplatz "1" -- "0..*" Foto : besitzt
+Sportplatz "1" -- "0..*" Bewertung : erhält
+Sportplatz "1" -- "0..*" Korrekturmeldung : betrifft
+
+Sportplatz "1" -- "0..*" Sportplatz_Sportart
+Sportart "1" -- "0..*" Sportplatz_Sportart
+
+@enduml
