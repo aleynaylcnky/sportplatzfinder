@@ -34,8 +34,24 @@ services:
     networks:
       - sportplatzfinder
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: sportplatzfinder-keycloak
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    ports:
+      - "${KEYCLOAK_HOST_PORT:-8081}:8080"
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    networks:
+      - sportplatzfinder
+
 volumes:
   db-data:
+  keycloak-data:
 
 networks:
   sportplatzfinder:
